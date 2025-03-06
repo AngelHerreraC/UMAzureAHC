@@ -1,0 +1,36 @@
+networks:
+  my-network2:
+
+services:
+  appsample:
+    container_name: name
+    build:
+      context: .
+      dockerfile: Dockerfile2
+    restart: always
+    ports:
+      - 3000:3000
+    volumes:
+      - ./app-um:/usr/src/app
+      - /usr/src/app/node_modules
+      - /usr/src/app/.next
+    command: >
+      sh -c "npm install && npm run dev"
+    networks:
+      - my-network2
+
+  appdatabase:
+    container_name: nameDatabase
+    image: mariadb:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: HeyaSerere
+      MYSQL_DATABASE: myapp
+      MYSQL_USER: myapp_user
+      MYSQL_PASSWORD: myapp_password
+    volumes:
+      - ./db/files:/var/lib/mysql
+      - ./db/config:/etc/mysql/conf.d
+    ports:
+      - 3306:3306
+    networks:
+      - my-network2
